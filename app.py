@@ -118,6 +118,19 @@ def login():
 
     return jsonify({'message': 'Login successful'}), 200  # Return success message
 
+# Route to get all students or a specific student by ID (GET request)
+@app.route('/students', methods=['GET'])
+def get_students():
+    students = Student.query.all()  # Retrieve all students from the database
+    return jsonify([student.serialize() for student in students])  # Return serialized student data
+
+@app.route('/students/<int:student_id>', methods=['GET'])
+def get_student(student_id):
+    student = Student.query.get(student_id)  # Retrieve student by ID
+    if student is None:
+        return jsonify({'error': 'Student not found'}), 404  # Return error if student is not found
+    return jsonify(student.serialize())  # Return serialized student data
+
 # Route to create a new student (POST request)
 @app.route('/students', methods=['POST'])  
 def create_student():
